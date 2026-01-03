@@ -1,10 +1,11 @@
 "use client";
 
 import { motion, useScroll, useTransform } from 'framer-motion';
-import HeroSection from '@/components/HeroSection';
-import ConnectSection from '@/components/ConnectSection';
-import BeatsSection from '@/components/BeatsSection';
-import AboutSection from '@/components/AboutSection';
+import HeroSection from "@/components/HeroSection";
+import BeatsSection from "@/components/BeatsSection";
+import AboutSection from "@/components/AboutSection";
+import ConnectSection from "@/components/ConnectSection";
+
 
 export default function Home() {
   const { scrollY } = useScroll();
