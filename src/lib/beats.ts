@@ -15,7 +15,7 @@ export const beats: Beat[] = [
     bpm: 121,
     genre: 'Movie Score',
     duration: '3:10',
-    audioSrc: '/audio/sensations.mp3',
+    audioSrc: './audio/sensations.mp3',
     gradient: 'from-purple-600 to-pink-600'
   },
   {
@@ -24,7 +24,7 @@ export const beats: Beat[] = [
     bpm: 120,
     genre: 'Afrobeat',
     duration: '2:28',
-    audioSrc: '/audio/yusta.mp3',
+    audioSrc: './audio/yusta.mp3',
     gradient: 'from-teal-600 to-orange-600'
   },
   {
@@ -33,7 +33,7 @@ export const beats: Beat[] = [
     bpm: 121,
     genre: 'Rap/Hip-Hop',
     duration: '2:38',
-    audioSrc: '/audio/Spaceglide.mp3',
+    audioSrc: './audio/Spaceglide.mp3',
     gradient: 'from-blue-600 to-purple-600'
   },
   {
@@ -42,7 +42,7 @@ export const beats: Beat[] = [
     bpm: 119,
     genre: 'Rap/Hip-Hop',
     duration: '4:20',
-    audioSrc: '/audio/Suspense.mp3',
+    audioSrc: './audio/Suspense.mp3',
     gradient: 'from-blue-600 to-cyan-600'
   }
 ]
