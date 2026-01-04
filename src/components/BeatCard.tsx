@@ -17,10 +17,12 @@ interface Beat {
 interface BeatCardProps {
   beat: Beat;
   index: number;
+  isPlaying: boolean;
+  onPlayPause: (beatId: string) => void;
+  currentPlayingId: string | null;
 }
 
-export default function BeatCard({ beat, index }: BeatCardProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
+export default function BeatCard({ beat, index, isPlaying, onPlayPause, currentPlayingId }: BeatCardProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -47,13 +49,13 @@ export default function BeatCard({ beat, index }: BeatCardProps) {
     };
     
     const handleEnded = () => {
-      setIsPlaying(false);
+      onPlayPause(beat.id);
       setCurrentTime(0);
     };
     
     const handleError = (e: any) => {
       console.error('Audio error:', e);
-      setIsPlaying(false);
+      onPlayPause(beat.id);
     };
     
     audio.addEventListener('timeupdate', handleTimeUpdate);
@@ -76,17 +78,18 @@ export default function BeatCard({ beat, index }: BeatCardProps) {
       // Play the actual audio
       audioRef.current.play().catch(error => {
         console.error('Error playing audio:', error);
-        setIsPlaying(false);
+        onPlayPause(beat.id); // Stop playing on error
       });
     } else {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.currentTime = 0;
       }
     }
-  }, [isPlaying]);
+  }, [isPlaying, beat.id, onPlayPause]);
 
   const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
+    onPlayPause(beat.id);
   };
 
   const formatTime = (time: number) => {

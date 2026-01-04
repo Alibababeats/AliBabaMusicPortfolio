@@ -25,7 +25,7 @@ export const beats: Beat[] = [
     genre: 'Afrobeat',
     duration: '2:28',
     audioSrc: '/audio/yusta.mp3',
-    gradient: 'from-green-600 to-yellow-600'
+    gradient: 'from-teal-600 to-orange-600'
   },
   {
     id: '3',
@@ -43,6 +43,6 @@ export const beats: Beat[] = [
     genre: 'Rap/Hip-Hop',
     duration: '4:20',
     audioSrc: '/audio/Suspense.wav',
-    gradient: 'from-green-600 to-purple-600'
+    gradient: 'from-blue-600 to-cyan-600'
   }
 ]
