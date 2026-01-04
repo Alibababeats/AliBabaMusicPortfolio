@@ -42,7 +42,7 @@ export const beats: Beat[] = [
     bpm: 119,
     genre: 'Rap/Hip-Hop',
     duration: '4:20',
-    audioSrc: '/audio/Suspense.wav',
+    audioSrc: '/audio/Suspense.mp3',
     gradient: 'from-blue-600 to-cyan-600'
   }
 ]
