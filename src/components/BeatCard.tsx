@@ -169,10 +169,11 @@ export default function BeatCard({ beat, index, isPlaying, onPlayPause, currentP
           {/* Play button with visualization */}
           <div className="relative">
             <motion.button
-              whileHover={{ scale: 1.1 }}
+              whileHover={{ scale: 1.1, cursor: "pointer" }}
               whileTap={{ scale: 0.95 }}
               onClick={handlePlayPause}
-              className={`w-16 h-16 rounded-full bg-gradient-to-r ${beat.gradient} flex items-center justify-center transition-all duration-300 relative z-10 cursor-pointer`}
+              className={`w-16 h-16 rounded-full bg-gradient-to-r ${beat.gradient} flex items-center justify-center transition-all duration-300 relative z-10`}
+              style={{ cursor: 'pointer' }}
             >
               {isPlaying ? (
                 <Pause className="w-7 h-7" fill="white" />
