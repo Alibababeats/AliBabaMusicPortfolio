@@ -24,7 +24,7 @@ export const beats: Beat[] = [
     bpm: 120,
     genre: 'Afrobeat',
     duration: '2:28',
-    audioSrc: './audio/yusta.mp3',
+    audioSrc: './audio/Yusta.mp3',
     gradient: 'from-teal-600 to-orange-600'
   },
   {
