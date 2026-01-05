@@ -47,7 +47,7 @@ export default function AboutSection() {
           My name is Ali Salem, others may know me as Ali Baba. I have a passion for many things and I consider myself to be a jack of all trades. Not only did I build my beats from scratch, I also built this website from scratch. I currently live in Gaithersburg, Maryland but I grew up in Waterbury, Connecticut and I was born to Egyptian Immigrants.
         </p>
         <p className="text-lg text-gray-300 mb-4">
-          Early in life, I was always surrounded by music, my father taught me how to dj at a very young age. I did not really like mixing, but I loved to hear sounds. By the time I was in middle school, I found out that I could make my own music on my phone with garageband. My father saw me making music on my phone, and he secretly bought me a macbook with logic pro x on it and gave it to me.
+          Right now I currently live with my mother who is a single mother. She has supported me a lot. Early in life, I was always surrounded by music, and by the time I was in middle school, I found out that I could make my own music on my phone with GarageBand.
         </p>
         <p className="text-lg text-gray-300">
           Here we are now! years later I'm still producing, making music is the one thing in my life that I would never get tired of doing. If it became my job, it would never feel like work!
