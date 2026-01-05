@@ -44,13 +44,13 @@ export default function AboutSection() {
         className="max-w-3xl mx-auto text-center mb-16"
       >
         <p className="text-lg text-gray-300 mb-4">
-          My name is Ali Salem, others may know me as Ali Baba. I have a passion for many things and I consider myself to be a jack of all trades. Not only did I build my beats from scratch, I also built this website from scratch. I currently live in Gaithersburg, Maryland but I grew up in Waterbury, Connecticut and I was born to Egyptian Immigrants.
+          My name is Ali Salem, also known as Ali Baba. I'm a producer and beat maker who loves building from the ground up—whether that's crafting beats from scratch or creating this website from scratch. I'm based in Gaithersburg, Maryland, and I'm proud to be the son of Egyptian immigrants.
         </p>
         <p className="text-lg text-gray-300 mb-4">
-          Right now I currently live with my mother who is a single mother. She has supported me a lot. Early in life, I was always surrounded by music, and by the time I was in middle school, I found out that I could make my own music on my phone with GarageBand.
+          Right now I live with my mother, who's a single mother, and she always pushes me to do better and always wishes for my success. When I was failing my first year of college, she still told me that I am very smart. My mother is my biggest supporter, and I want to support her too.
         </p>
         <p className="text-lg text-gray-300">
-          Here we are now! years later I'm still producing, making music is the one thing in my life that I would never get tired of doing. If it became my job, it would never feel like work!
+          Everyday I'm learning something new, I push my body and my mind, and I always try to have fun.
         </p>
       </motion.div>
 
