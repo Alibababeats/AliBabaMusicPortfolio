@@ -44,5 +44,14 @@ export const beats: Beat[] = [
     duration: '4:20',
     audioSrc: './audio/Suspense.mp3',
     gradient: 'from-blue-600 to-cyan-600'
+  },
+  {
+    id: '5',
+    title: '4AM',
+    bpm: 100,
+    genre: 'Rap/Hip-Hop',
+    duration: '3:14',
+    audioSrc: './audio/4AM.mp3',
+    gradient: 'from-orange-600 to-red-600'
   }
 ]
