@@ -62,5 +62,14 @@ export const beats: Beat[] = [
     duration: '0:00',
     audioSrc: './audio/edm demo - 113bpm.mp3',
     gradient: 'from-teal-500 to-cyan-600'
+  },
+  {
+    id: '7',
+    title: 'With Me',
+    bpm: 113,
+    genre: 'Hip-Hop/Beach Vibes',
+    duration: '2:33',
+    audioSrc: './audio/with me - 113 bpm.mp3',
+    gradient: 'from-purple-600 to-pink-600'
   }
 ]
