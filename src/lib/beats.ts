@@ -61,6 +61,6 @@ export const beats: Beat[] = [
     genre: 'EDM',
     duration: '0:00',
     audioSrc: './audio/edm demo - 113bpm.mp3',
-    gradient: 'from-blue-800 to-indigo-900'
+    gradient: 'from-teal-500 to-cyan-600'
   }
 ]
