@@ -53,5 +53,14 @@ export const beats: Beat[] = [
     duration: '3:14',
     audioSrc: './audio/4AM.mp3',
     gradient: 'from-orange-600 to-red-600'
+  },
+  {
+    id: '6',
+    title: 'EDM Demo (Unfinished)',
+    bpm: 113,
+    genre: 'EDM',
+    duration: '0:00',
+    audioSrc: './audio/edm demo - 113bpm.mp3',
+    gradient: 'from-blue-800 to-indigo-900'
   }
 ]
