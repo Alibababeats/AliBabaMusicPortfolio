@@ -197,9 +197,14 @@ export default function HeroSection() {
             position: "relative",
             zIndex: 10,
             y: svgY,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
           } as any}
         >
-          <FancyHeadphones3D scrollSpring={s} />
+          <div style={{ width: "100%", maxWidth: "1200px" }}>
+            <FancyHeadphones3D scrollSpring={s} />
+          </div>
         </motion.div>
 
         {/* ── Floating particles ── */}
