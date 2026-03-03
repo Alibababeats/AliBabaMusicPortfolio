@@ -12,6 +12,7 @@ interface Beat {
   duration: string;
   audioSrc: string;
   gradient: string;
+  featured?: boolean;
 }
 
 interface BeatCardProps {
@@ -216,7 +217,25 @@ export default function BeatCard({ beat, index, isPlaying, onPlayPause, currentP
 
           {/* Beat info */}
           <div className="flex-1">
-            <h3 className="text-2xl mb-2">{beat.title}</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <h3 className="text-2xl mb-2">{beat.title}</h3>
+              {beat.featured && (
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '0.2rem 0.7rem',
+                  borderRadius: '9999px',
+                  fontSize: '0.7rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase' as const,
+                  background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+                  color: 'white',
+                  boxShadow: '0 0 16px rgba(124,58,237,0.4)',
+                  marginBottom: '0.5rem',
+                }}>MOST RECENT</span>
+              )}
+            </div>
             <div className="flex flex-wrap gap-4 text-sm text-gray-400">
               <div className="flex items-center gap-1">
                 <Activity className="w-4 h-4" />

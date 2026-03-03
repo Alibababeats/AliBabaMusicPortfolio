@@ -7,7 +7,7 @@ import ConnectSection from "@/components/ConnectSection";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-dark text-white relative overflow-hidden">
+    <main className="min-h-screen bg-gradient-dark text-white relative overflow-x-hidden">
       {/* Static gradient backgrounds */}
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-purple-600 rounded-full blur-3xl opacity-60" />

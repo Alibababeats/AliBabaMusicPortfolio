@@ -6,9 +6,20 @@ export interface Beat {
   duration: string
   audioSrc: string
   gradient: string
+  featured?: boolean
 }
 
 export const beats: Beat[] = [
+  {
+    id: '8',
+    title: 'Up Again at 3AM',
+    bpm: 125,
+    genre: 'House Music',
+    duration: '0:00',
+    audioSrc: './audio/up again at 3am - 125bpm.mp3',
+    gradient: 'from-indigo-600 to-cyan-500',
+    featured: true
+  },
   {
     id: '1',
     title: 'Sensations - One Last Hit Movie Score',
