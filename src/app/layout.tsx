@@ -27,6 +27,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`dark ${jost.variable}`}>
+      <head>
+        <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta httpEquiv="Pragma" content="no-cache" />
+        <meta httpEquiv="Expires" content="0" />
+      </head>
       <body
         className="bg-gradient-dark text-white min-h-screen"
         style={{ fontFamily: "Futura, var(--font-jost), 'Century Gothic', 'Trebuchet MS', Arial, sans-serif" }}
