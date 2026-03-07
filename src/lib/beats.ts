@@ -11,6 +11,16 @@ export interface Beat {
 
 export const beats: Beat[] = [
   {
+    id: '9',
+    title: 'All We Need is Love',
+    bpm: 124,
+    genre: 'House',
+    duration: '0:00', // Update this if you have the explicit duration, or default 0:00
+    audioSrc: './audio/bumping house music - 124bpm.mp3',
+    gradient: 'from-pink-500 to-rose-500',
+    featured: true
+  },
+  {
     id: '8',
     title: 'Up Again at 3AM',
     bpm: 125,

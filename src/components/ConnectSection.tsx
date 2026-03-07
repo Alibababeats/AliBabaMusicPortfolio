@@ -36,7 +36,7 @@ const socialLinks = [
 
 export default function ConnectSection() {
   return (
-    <section className="py-20 px-4 max-w-4xl mx-auto">
+    <section className="pt-20 pb-20 px-4 max-w-4xl mx-auto">
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

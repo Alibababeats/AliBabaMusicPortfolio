@@ -1,277 +1,172 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Play, Pause, Clock, Activity } from 'lucide-react';
+import { useRef, useState, useEffect, useMemo } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { Play, Pause, Activity } from 'lucide-react';
+import { useAudio } from './AudioContext';
+import { type Beat } from '../lib/beats';
 
-interface Beat {
-  id: string;
-  title: string;
-  bpm: number;
-  genre: string;
-  duration: string;
-  audioSrc: string;
-  gradient: string;
-  featured?: boolean;
+function formatTime(time: number) {
+  if (isNaN(time)) return '0:00';
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
 interface BeatCardProps {
   beat: Beat;
   index: number;
-  isPlaying: boolean;
-  onPlayPause: (beatId: string) => void;
-  currentPlayingId: string | null;
+  isMobileActive: boolean;
+  onMobileEnter: () => void;
 }
 
-export default function BeatCard({ beat, index, isPlaying, onPlayPause, currentPlayingId }: BeatCardProps) {
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+export default function BeatCard({ beat, index, isMobileActive, onMobileEnter }: BeatCardProps) {
+  const { currentBeat, isPlaying, playPause, currentTime, duration, seek } = useAudio();
+  const isThisBeat = currentBeat?.id === beat.id;
+  const isThisPlaying = isThisBeat && isPlaying;
+  
+  const cardRef = useRef<HTMLDivElement>(null);
+  const isInCenter = useInView(cardRef, { margin: "-40% 0px -40% 0px" });
+  
+  const [isMobile, setIsMobile] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    // Create audio element
-    audioRef.current = new Audio(beat.audioSrc);
-    
-    // Set up audio event listeners
-    const audio = audioRef.current;
-    
-    const handleTimeUpdate = () => {
-      if (audio) {
-        setCurrentTime(audio.currentTime);
-        setDuration(audio.duration || 0);
-      }
-    };
-    
-    const handleLoadedMetadata = () => {
-      if (audio) {
-        setDuration(audio.duration || 0);
-        console.log('Audio loaded successfully, duration:', audio.duration);
-      }
-    };
-    
-    const handleEnded = () => {
-      onPlayPause(beat.id);
-      setCurrentTime(0);
-    };
-    
-    const handleError = (e: any) => {
-      console.error('Audio error:', e);
-      onPlayPause(beat.id);
-    };
-    
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-    audio.addEventListener('ended', handleEnded);
-    audio.addEventListener('error', handleError);
-    
-    return () => {
-      audio.removeEventListener('timeupdate', handleTimeUpdate);
-      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      audio.removeEventListener('ended', handleEnded);
-      audio.removeEventListener('error', handleError);
-      audio.pause();
-      audio.src = '';
-    };
-  }, [beat.audioSrc]);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
+  // When this card scrolls into center on mobile, tell parent
   useEffect(() => {
-    if (isPlaying && audioRef.current) {
-      // Play the actual audio
-      audioRef.current.play().catch(error => {
-        console.error('Error playing audio:', error);
-        onPlayPause(beat.id); // Stop playing on error
-      });
-    } else {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
+    if (isMobile && isInCenter) {
+      onMobileEnter();
     }
-  }, [isPlaying, beat.id, onPlayPause]);
+  }, [isMobile, isInCenter, onMobileEnter]);
 
-  const handlePlayPause = () => {
-    onPlayPause(beat.id);
-  };
+  const shouldHighlight = (isMobile && isMobileActive) || (!isMobile && isHovered);
 
-  const formatTime = (time: number) => {
-    if (isNaN(time)) return '0:00';
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
-
-  const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
-
-  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current || !duration) return;
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickPercentage = clickX / rect.width;
-    const newTime = clickPercentage * duration;
-    
-    audioRef.current.currentTime = newTime;
-    setCurrentTime(newTime);
-  };
-
-  const handleProgressMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      if (!audioRef.current || !duration) return;
-      
-      const rect = e.currentTarget.getBoundingClientRect();
-      const clickX = Math.max(0, Math.min(moveEvent.clientX - rect.left, rect.width));
-      const clickPercentage = clickX / rect.width;
-      const newTime = clickPercentage * duration;
-      
-      audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
-    };
-    
-    const handleMouseUp = () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-    
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
+  // Memoize random heights so visualizer bars don't flicker on re-render
+  const barHeights = useMemo(() => Array.from({ length: 6 }, () => (30 + Math.random() * 70) + '%'), [beat.id]);
 
   return (
     <motion.div
+      ref={cardRef}
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ delay: index * 0.1 }}
+      transition={{ delay: 0.1, duration: 0.4 }}
       whileHover={{ scale: 1.02 }}
-      className="group relative"
+      animate={{ scale: shouldHighlight ? 1.02 : 1 }}
+      className="relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-300 overflow-hidden">
-        {/* Animated gradient background */}
-        <motion.div
-          className={`absolute inset-0 bg-gradient-to-r ${beat.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
-        />
-
-        {/* Progress indicator bar */}
+      <div className={`relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border transition-all duration-300 overflow-hidden ${shouldHighlight ? 'border-gray-600' : 'border-gray-700'}`}>
+        
+        {/* Animated gradient background on hover or center scroll (mobile) */}
         <div 
-          className="absolute top-0 left-0 right-0 h-1 bg-gray-700 overflow-hidden cursor-pointer hover:h-2 transition-all duration-200"
-          onClick={handleProgressClick}
-          onMouseDown={handleProgressMouseDown}
-        >
-          <motion.div
-            className={`h-full bg-gradient-to-r ${beat.gradient}`}
-            style={{ width: `${progressPercentage}%` }}
-            transition={{ duration: 0.1 }}
-          />
-        </div>
+          className={`absolute inset-0 bg-gradient-to-r ${beat.gradient} transition-opacity duration-500`}
+          style={{ opacity: shouldHighlight ? 0.1 : 0 }}
+        />
+        
+        <div className="relative flex flex-col md:flex-row items-center gap-6">
+          
+          {/* Play/Pause Button */}
+          <button
+            onClick={() => playPause(beat)}
+            className={`w-16 h-16 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 shadow-lg ${(isThisPlaying || shouldHighlight) ? 'bg-gradient-to-r ' + beat.gradient + ' scale-105' : 'bg-gray-700 hover:bg-gray-600'}`}
+          >
+            {isThisPlaying ? (
+              <Pause className="w-8 h-8 text-white relative z-10" />
+            ) : (
+              <Play className="w-8 h-8 text-white ml-2 relative z-10" />
+            )}
+          </button>
 
-        <div className="relative flex items-center gap-6">
-          {/* Play button with visualization */}
-          <div className="relative">
-            <motion.button
-              whileHover={{ scale: 1.1, cursor: "pointer" }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handlePlayPause}
-              className={`w-16 h-16 rounded-full bg-gradient-to-r ${beat.gradient} flex items-center justify-center transition-all duration-300 relative z-10`}
-              style={{ cursor: 'pointer' }}
-            >
-              {isPlaying ? (
-                <Pause className="w-7 h-7" fill="white" />
-              ) : (
-                <Play className="w-7 h-7 ml-1" fill="white" />
+          {/* Track Info */}
+          <div className="flex-1 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
+              <h3 className="text-xl font-bold">{beat.title}</h3>
+              {beat.featured && (
+                <span className={`px-2 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${beat.gradient}`}>
+                  Featured
+                </span>
               )}
-            </motion.button>
+            </div>
+            
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm text-gray-400">
+              <span className="flex items-center gap-1">
+                <Activity className="w-4 h-4" />
+                {beat.bpm} BPM
+              </span>
+              <span>•</span>
+              <span className="px-3 py-1 rounded-full bg-gray-900/50 border border-gray-700">
+                {beat.genre}
+              </span>
+            </div>
+          </div>
 
-            {/* Pulsing ring animation when playing */}
-            {isPlaying && (
-              <>
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.3, 1],
-                    opacity: [0.6, 0.2, 0.6]
+          {/* End section: Visualizer while playing */}
+          <div className="flex items-center justify-end w-32 gap-1 h-12">
+            {isThisPlaying ? (
+              barHeights.map((h, i) => (
+                <div
+                  key={i}
+                  className={`w-1.5 bg-gradient-to-t ${beat.gradient} rounded-t-sm animate-[bounce_1s_infinite]`}
+                  style={{
+                    animationDelay: (i * 0.15) + 's',
+                    height: h
                   }}
-                  transition={{ 
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  className={`absolute inset-0 rounded-full bg-gradient-to-r ${beat.gradient}`}
                 />
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.3, 1],
-                    opacity: [0.6, 0.2, 0.6]
-                  }}
-                  transition={{ 
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1
-                  }}
-                  className={`absolute inset-0 rounded-full bg-gradient-to-r ${beat.gradient}`}
-                />
-              </>
+              ))
+            ) : (
+              <span className="text-gray-500 text-sm font-medium">{beat.duration || '0:00'}</span>
             )}
           </div>
-
-          {/* Beat info */}
-          <div className="flex-1">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <h3 className="text-2xl mb-2">{beat.title}</h3>
-              {beat.featured && (
-                <span style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  padding: '0.2rem 0.7rem',
-                  borderRadius: '9999px',
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase' as const,
-                  background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-                  color: 'white',
-                  boxShadow: '0 0 16px rgba(124,58,237,0.4)',
-                  marginBottom: '0.5rem',
-                }}>MOST RECENT</span>
-              )}
-            </div>
-            <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-              <div className="flex items-center gap-1">
-                <Activity className="w-4 h-4" />
-                <span>{beat.bpm} BPM</span>
-              </div>
-              <div className="px-3 py-1 bg-gray-700/50 rounded-full">
-                {beat.genre}
-              </div>
-              <div className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                <span>{formatTime(currentTime)} / {formatTime(duration)}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Visual audio bars */}
-          <div className="hidden md:flex items-end gap-1 h-16">
-            {[...Array(12)].map((_, i) => (
-              <motion.div
-                key={i}
-                animate={{
-                  height: isPlaying
-                    ? `${20 + Math.random() * 80}%`
-                    : '20%',
-                }}
-                transition={{
-                  duration: 0.3,
-                  repeat: isPlaying ? Infinity : 0,
-                  repeatType: 'reverse',
-                  delay: i * 0.05,
-                }}
-                className={`w-1 bg-gradient-to-t ${beat.gradient} rounded-full`}
-              />
-            ))}
-          </div>
         </div>
+
+        {/* Progress bar - only visible when this beat is selected */}
+        {isThisBeat && (
+          <div className="relative mt-4 flex items-center gap-3">
+            <span className="text-xs text-gray-400 w-10 text-right">{formatTime(currentTime)}</span>
+            <div
+              className="flex-1 relative cursor-pointer"
+              style={{ height: '16px', display: 'flex', alignItems: 'center' }}
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const clickX = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+                const pct = clickX / rect.width;
+                seek(pct * duration);
+              }}
+            >
+              {/* Track */}
+              <div style={{ width: '100%', height: '4px', backgroundColor: '#374151', borderRadius: '9999px', position: 'relative' }}>
+                {/* Filled */}
+                <div style={{
+                  position: 'absolute', left: 0, top: 0, height: '100%',
+                  width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%`,
+                  background: `linear-gradient(to right, #a855f7, #22d3ee)`,
+                  borderRadius: '9999px',
+                  pointerEvents: 'none',
+                }} />
+                {/* Circle thumb */}
+                <div style={{
+                  position: 'absolute', top: '50%',
+                  left: `${duration > 0 ? (currentTime / duration) * 100 : 0}%`,
+                  width: '12px', height: '12px',
+                  backgroundColor: '#ffffff',
+                  borderRadius: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  boxShadow: '0 0 4px rgba(0,0,0,0.6)',
+                  pointerEvents: 'none',
+                }} />
+              </div>
+            </div>
+            <span className="text-xs text-gray-400 w-10">{formatTime(duration)}</span>
+          </div>
+        )}
       </div>
     </motion.div>
   );

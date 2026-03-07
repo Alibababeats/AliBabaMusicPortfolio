@@ -1,6 +1,8 @@
 import './globals.css'
 import { Metadata } from 'next'
 import { Jost } from 'next/font/google'
+import { AudioProvider } from '@/components/AudioContext'
+import GlobalAudioPlayer from '@/components/GlobalAudioPlayer'
 
 const jost = Jost({
   subsets: ['latin'],
@@ -33,10 +35,13 @@ export default function RootLayout({
         <meta httpEquiv="Expires" content="0" />
       </head>
       <body
-        className="bg-gradient-dark text-white min-h-screen"
+        className="bg-gradient-dark text-white min-h-screen pb-48"
         style={{ fontFamily: "Futura, var(--font-jost), 'Century Gothic', 'Trebuchet MS', Arial, sans-serif" }}
       >
-        {children}
+        <AudioProvider>
+          {children}
+          <GlobalAudioPlayer />
+        </AudioProvider>
       </body>
     </html>
   )

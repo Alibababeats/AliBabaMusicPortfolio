@@ -27,6 +27,8 @@ export default function Home() {
         <BeatsSection />
         <AboutSection />
         <ConnectSection />
+        {/* Spacer to ensure content scrolls above the fixed bottom player */}
+        <div style={{ height: '200px' }} />
       </div>
     </main>
   );

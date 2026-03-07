@@ -6,14 +6,10 @@ import BeatCard from './BeatCard';
 import { beats } from '../lib/beats';
 
 export default function BeatsSection() {
-  const [currentPlayingId, setCurrentPlayingId] = useState<string | null>(null);
-
-  const handlePlayPause = (beatId: string) => {
-    setCurrentPlayingId(currentPlayingId === beatId ? null : beatId);
-  };
+  const [activeMobileIndex, setActiveMobileIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-20 px-4 max-w-6xl mx-auto">
+    <section className="py-20 px-4 max-w-6xl mx-auto mb-24">
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -38,10 +34,9 @@ export default function BeatsSection() {
           <BeatCard 
             key={beat.id} 
             beat={beat} 
-            index={index} 
-            isPlaying={currentPlayingId === beat.id}
-            onPlayPause={handlePlayPause}
-            currentPlayingId={currentPlayingId || null}
+            index={index}
+            isMobileActive={activeMobileIndex === index}
+            onMobileEnter={() => setActiveMobileIndex(index)}
           />
         ))}
       </div>
